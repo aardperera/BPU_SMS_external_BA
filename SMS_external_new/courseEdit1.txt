@@ -1,0 +1,78 @@
+<?php
+  //Buffer larger content areas like the main page content
+  ob_start();
+?>
+
+<script>
+function validate_form(thisform)
+{
+	with (thisform)
+	  {
+		if (!validate_required(txtCourseID) || !validate_required(txtNameEnglish) || !validate_required(txtNameSinhala))
+		{alert("One or more mandatory fields are kept blank.");return false;}
+	  }
+}
+</script>
+
+<h1>Course Edit</h1>
+<?php
+	include('dbAccess.php');
+
+$db = new DBOperations();
+
+	if (isset($_POST['btnSubmit']))
+	{
+		$courseID = $db->cleanInput($_POST['txtCourseID']);
+		$nameEngslih = $db->cleanInput($_POST['txtNameEnglish']);
+		$nameSinhala = $db->cleanInput($_POST['txtNameSinhala']);
+		$courseType = $_POST['lstCourseType'];
+		
+		$query = "UPDATE course SET nameEnglish='$nameEngslih', nameSinhala='$nameSinhala', courseType='$courseType' WHERE courseID='$courseID'";
+		$result = $db->executeQuery($query);
+		header("location:courseAdmin.php");
+	}
+	
+	$courseID = $db->cleanInput($_GET['courseID']);
+	$query = "SELECT * FROM course WHERE courseID='$courseID'";
+	$result = $db->executeQuery($query);
+	
+	$row =  $db->Next_Record($result);
+	if ($db->Row_Count($result)>0)
+	{
+?>
+<form method="post" action="courseEdit.php?courseID=<?php echo $courseID ?>" onsubmit="return validate_form(this);" class="plain">
+<table class="searchResults">
+	<tr>
+    	<td>Course ID : </td><td><input name="txtCourseID" type="text" value="<?php echo $row['courseID'] ?>" readonly="readonly" /></td>
+    </tr>
+    <tr>
+    	<td>Name (English) : </td><td><input name="txtNameEnglish" type="text" value="<?php echo $row['nameEnglish'] ?>" style="width:300px"/></td>
+    </tr>
+    <tr>
+    	<td>Name (Sinhala) : </td><td><input name="txtNameSinhala" type="text" value="<?php echo $row['nameSinhala'] ?>" style="width:300px"/></td>
+    </tr>
+    <tr>
+    	<td>Course Type : </td><td><select name="lstCourseType">
+        	<option <?php if ($row['courseType']=='Diploma') echo "selected='selected'"; ?> value="Diploma">Diploma</option>
+        	<option <?php if ($row['courseType']=='Bachelor') echo "selected='selected'"; ?> value="Bachelor">Bachelor Degree</option>
+            <option <?php if ($row['courseType']=='PG Diploma') echo "selected='selected'"; ?> value="PG Diploma">Postgraduate Diploma</option>
+            <option <?php if ($row['courseType']=='Master') echo "selected='selected'"; ?> value="Master">Master Degree</option>
+            <option <?php if ($row['courseType']=='MPhil') echo "selected='selected'"; ?> value="MPhil">M.Phil Degree</option>
+            <option <?php if ($row['courseType']=='PhD') echo "selected='selected'"; ?> value="PhD">Ph.D. Degree</option>
+        </select></td>
+    </tr>
+</table>
+<br/><br/>
+<p><input name="btnCancel" type="button" value="Cancel" onclick="document.location.href = 'courseAdmin.php';"  class="button"/>&nbsp;&nbsp;&nbsp;<input name="btnSubmit" type="submit" value="Submit" class="button" /></p>
+</form>
+
+<?php
+   }
+  //Assign all Page Specific variables
+  $pagemaincontent = ob_get_contents();
+  ob_end_clean();
+ $pagetitle = "Edit Course - Courses - Student Management System (External) - Buddhist & Pali University of Sri Lanka";
+  $navpath = "<ul><li><a href='home.php'>Home </a></li><li><a href='courseAdmin.php'>Courses </a></li><li>Edit Course</li></ul>";
+  //Apply the template
+  include("master_sms_external.php");
+?>
