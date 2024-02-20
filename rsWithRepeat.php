@@ -1,4 +1,6 @@
-C:\xampp\htdocs\SMS_external_BA\rsWithRepeat.php<?php
+
+<?php
+
     error_reporting(E_ALL & ~E_WARNING);
 ?>
 <?php
