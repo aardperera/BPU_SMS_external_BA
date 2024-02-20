@@ -15,7 +15,7 @@ td {
 
 .vTableHeader1 {
     text-align: center;
-	text-size:10pt;
+	font-size:10pt;
     transform: rotate(270deg);
 	
 	max-width:50px;
@@ -23,7 +23,7 @@ td {
 
 .vTableHeader2 {
     text-align: center;
-	text-size:10pt;
+	font-size:10pt;
     transform: rotate(270deg);
     height: 150px;
 	word-wrap: break-word;
@@ -33,7 +33,7 @@ td {
 
 .vTableHeader {
     text-align: center;
-	text-size:10pt;
+	font-size:10pt;
     transform: rotate(270deg);
     height: 75px;
 	max-width:50px;
@@ -185,6 +185,7 @@ if (isset($_POST['btn-save'])) {
 				$resultallSE = $db->executeQuery($queryallSE);
 				 $rowSE=  $db->Next_Record($resultallSE);
 				//getting exam results
+                
 				$queryallSER = "Select distinct indexNo from crs_subject c,subject s,exameffort e where  c.CourseID='$courseID' and c.subcrsid='$subcrsID'  and c.subjectID=s.subjectID  and e.subjectID=s.subjectID and e.acYear='$acyear'  order by e.indexNo";
 				//print $queryallSER;
 				$resultallSER = $db->executeQuery($queryallSER);
