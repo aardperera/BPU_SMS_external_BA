@@ -149,33 +149,21 @@ if (isset($_POST['btn-save'])) {
             </tr>
             <!-- Sub-Heading Row -->
             <tr>
-                <!-- Single Subject -->
-                <?php
-				 $queryallSE = "Select * from crs_subject c,subject s where  c.CourseID='$courseID' and c.subcrsid='$subcrsID'  and c.subjectID=s.subjectID ORDER BY s.suborder";
-			//	print $queryallSE;
-				$resultallSE = $db->executeQuery($queryallSE);
-				// $rowS=  $db->Next_Record($resultmark);
-                for ($i=0;$i<$db->Row_Count($resultallSE);$i++)
-		         {              ?>
-                <td class="vTableHeader">
-                    1st Marking
-                </td>
-                <td class="vTableHeader">
-                    2nd Marking
-                </td>
-                <td class="vTableHeader">
-                    Total
-                </td>
-                <td class="vTableHeader">
-                    Grade
-                </td>
-                <td class="vTableHeader">
-                    Points
-                </td>
-                <?php
-                 }
-                ?>
-            </tr>
+                    <?php
+                    $queryallSE = "Select * from crs_subject c,subject s where  c.CourseID='$courseID' and c.subcrsid='$subcrsID'  and c.subjectID=s.subjectID ORDER BY s.suborder";
+                    $resultallSE = $db->executeQuery($queryallSE);
+                    while ($db->Next_Record($resultallSE)){?>
+                        <td class="vTableHeader">1st Marking</td>
+                        <td class="vTableHeader">2nd Marking</td>
+                        <td class="vTableHeader">Total</td>
+                        <td class="vTableHeader">Grade</td>
+                        <td class="vTableHeader">Points</td>
+                        <td class="vTableHeader">Actual Grade</td> 
+                        <td class="vTableHeader">Actual Grade Ponits</td> 
+                    <?php
+                    }
+                    ?>
+                </tr>
             <!-- One Entry -->
             
             
