@@ -97,21 +97,22 @@ td {
                             $subjects[$k]=$rowS['subjectID'];
                             $k++;
                             $str2=$nameEnglish."       ".$subjectID;
-                    ?>
+                            ?>
                             <!-- need 7column  -->
                             <th colspan="7" class="vTableHeader2"><?php echo wordwrap($str2,15,"<br>\n")?></th>
                             <?php
                         }
-                    $noofsubjects=$k;
-                    ?>
+                        $noofsubjects=$k;
+                        ?>
                     
-                    <!-- Fixed -->
-                    <th rowspan="2" class="vTableHeader1">Sub Total</th>
-                    <th rowspan="2" class="vTableHeader1">%</th>
-                    <th rowspan="2" class="vTableHeader1">Final Results</th> 
+                        <!-- Fixed -->
+                        <th rowspan="2" class="vTableHeader1">Sub Total</th>
+                        <th rowspan="2" class="vTableHeader1">%</th>
+                        <th rowspan="2" class="vTableHeader1">Final Results</th> 
                 </tr>
                 <tr>
                     <?php
+
                     $queryallSE = "Select * from crs_subject c,subject s where  c.CourseID='$courseID' and c.subcrsid='$subcrsID'  and c.subjectID=s.subjectID ORDER BY s.suborder";
                     $resultallSE = $db->executeQuery($queryallSE);
                     while ($db->Next_Record($resultallSE)){?>
@@ -126,6 +127,7 @@ td {
                     }
                     ?>
                 </tr>
+
                 <?php
                 $queryallSE = "Select * from crs_subject c,subject s where  c.CourseID='$courseID' and c.subcrsid='$subcrsID'  and c.subjectID=s.subjectID ";
 				$resultallSE = $db->executeQuery($queryallSE);
@@ -138,89 +140,157 @@ td {
 			
                 while ($rowSER = $db->Next_Record($resultallSER)) {
 
-                    $indexNo = $rowSER['indexNo'];                            
-                    // filter not completed and Absent student
+                    $indexNo = $rowSER['indexNo'];   
+
                     $queryallcom = "SELECT r.status 
                     FROM final_result r 
                     INNER JOIN crs_enroll c ON r.enroll_id = c.Enroll_id 
                     WHERE c.yearEntry = '$acyear' 
-                    AND c.indexNo = '$indexNo' 
-                    AND (r.status = 'Not Complete' OR r.status = 'Absent')";
-    
+                    AND c.indexNo = '$indexNo'"; 
                     $resultallcom = $db->executeQuery($queryallcom);
                     $rowcom = $db->Next_Record($resultallcom);
-                    // Display not completed and Absent student
-                    if ($rowcom && ($rowcom['status'] === 'Not Complete' || $rowcom['status'] === 'Absent')) {
-    
-                        $j++;
-  
-                        $status1 = isset($rowcom['status']) ? $rowcom['status'] : '';
-    
-                        $queryalldetl = "Select c.regNo,r.nameEnglish,r.addressE1,r.addressE2,r.addressE3 from student_a r,crs_enroll c  where  c.yearEntry='$acyear' and c.indexNo='$indexNo' and r.studentID=c.studentID";
-                        $resultalldetl = $db->executeQuery($queryalldetl);
-                        $rowdetl = $db->Next_Record($resultalldetl);
-                        $regNo = $rowdetl['regNo']; 
-                        $nameEnglish = $rowdetl['nameEnglish']; 
-                        $addressE1 = $rowdetl['addressE1']; 
-                        $addressE2 = $rowdetl['addressE2']; 
-                        $addressE3 = $rowdetl['addressE3']; 
+                    $j++;
+                    $queryalldetl = "Select c.regNo,r.nameEnglish,r.addressE1,r.addressE2,r.addressE3 from student_a r,crs_enroll c  where  c.yearEntry='$acyear' and c.indexNo='$indexNo' and r.studentID=c.studentID";
+                    $resultalldetl = $db->executeQuery($queryalldetl);
+                    $rowdetl = $db->Next_Record($resultalldetl);
+                    $regNo = $rowdetl['regNo']; 
+                    $nameEnglish = $rowdetl['nameEnglish']; 
+                    $addressE1 = $rowdetl['addressE1']; 
+                    $addressE2 = $rowdetl['addressE2']; 
+                    $addressE3 = $rowdetl['addressE3']; 
                 
-                        ?>    
-                        <tr>
-                            <td style="size: 3;" align="center"><?php echo $j; ?></td>
-                            <td style="size: 15;"><?php echo $regNo; ?></td>
-                            <td style="size: 12;"><?php echo $indexNo; ?></td>
-                            <td style="size: 80;"><?php echo $nameEnglish; ?></td>
-                            <td style="size: 70;"><?php echo $addressE1; echo $addressE2; echo $addressE3;?></td>
-                            <td style="size: 4;"></td>
+                    ?>    
+                    <tr>
+                        <td style="size: 3;" align="center"><?php echo $j; ?></td>
+                        <td style="size: 15;"><?php echo $regNo; ?></td>
+                        <td style="size: 12;"><?php echo $indexNo; ?></td>
+                        <td style="size: 80;"><?php echo $nameEnglish; ?></td>
+                        <td style="size: 70;"><?php echo $addressE1; echo $addressE2; echo $addressE3;?></td>
+                        <td style="size: 4;"></td>
                         
-                        <?php
-
-                        $queryallSE = "Select * from crs_subject c,subject s where  c.CourseID='$courseID' and c.subcrsid='$subcrsID'  and c.subjectID=s.subjectID ORDER BY s.suborder";
-                        $resultallSE = $db->executeQuery($queryallSE);
-                        while ($subjects = $db->Next_Record($resultallSE)){
-                            $queryR = "SELECT *
-                            FROM exameffortr 
-                            WHERE effort = ".$effortNo."
-                            AND subjectID = ".$subjects['subjectID']."
-                            AND indexNo = ".$indexNo;
-                        
-                            $repeatSubjects = $db->executeQuery($queryR);
-                            $repeatSubject = $db->Next_Record($repeatSubjects);
-                        
-                            if($subjects['subjectID'] == $repeatSubject['subjectID']){
-                            ?>
-                                    <td><?php echo $repeatSubject[7]; ?></td>
-                                    <td><?php echo $repeatSubject[8]; ?></td>
-                                    <td><?php echo $repeatSubject[4]; ?></td>
-                                    <td><?php echo $repeatSubject[5]; ?></td>
-                                    <td><?php echo $repeatSubject[9]; ?></td>
-                                    <td><?php echo $repeatSubject[11];?></td>
-                                    <td><?php echo $repeatSubject[12];?></td>
-                        
-                                    <?php
-                        
-                            } else {
-                            ?>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td> 
                             <?php
+                        if ($rowcom && ($rowcom['status'] === 'Not Complete' || $rowcom['status'] === 'Absent')) {
+    
                         
-                            }
-                                                
+                            $status1 = isset($rowcom['status']) ? $rowcom['status'] : '';
+                            //print $status1;
+                        
+                            $queryallSE = "Select * from crs_subject c,subject s where  c.CourseID='$courseID' and c.subcrsid='$subcrsID'  and c.subjectID=s.subjectID ORDER BY s.suborder";
+                            $resultallSE = $db->executeQuery($queryallSE);
+                            while ($subjects = $db->Next_Record($resultallSE)){
+                                $queryR = "SELECT *
+                                FROM exameffortr 
+                                WHERE effort = ".$effortNo."
+                                AND subjectID = ".$subjects['subjectID']."
+                                AND indexNo = ".$indexNo;
                             
-                            $marks2=0;$a=0;
-                            $marks2=$marks2+(int)$rowR[12];
-                            $a=$a+1;
+                                $repeatSubjects = $db->executeQuery($queryR);
+                                $repeatSubject = $db->Next_Record($repeatSubjects);
+                            
+                                if($subjects['subjectID'] == $repeatSubject['subjectID']){
+                                    ?>
+                                        <td><?php echo $repeatSubject[7]; ?></td>
+                                        <td><?php echo $repeatSubject[8]; ?></td>
+                                        <td><?php echo $repeatSubject[4]; ?></td>
+                                        <td><?php echo $repeatSubject[5]; ?></td>
+                                        <td><?php echo $repeatSubject[9]; ?></td>
+                                        <td><?php echo $repeatSubject[11];?></td>
+                                        <td><?php echo $repeatSubject[12];?></td>
+                            
+                                        <?php 
+                            
+                                }else{
+                                    ?>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>  
+                                <?php 
+                                } 
+                                                
+                            }
+                        }else{
+                        //     while ($rowSER= $db->Next_Record($resultallSER))
+                        // // for ($j=0;$j<$db->Row_Count($resultallSER);$j++)
+                        //     { 
+                        //     // $rowSER=  $db->Next_Record($resultallSER);
+                        //     $indexNo=$rowSER['indexNo'];
+                        //     $j++;
+                        //  print $indexNo;
+                            $queryallSERM = "Select e.mark1,e.mark2,e.marks,e.grade,e.gradePoint,e.subjectID from exameffort e,subject s  where  e.acYear='$acyear' and e.indexNo='$indexNo' and s.subjectID=e.subjectID ORDER BY s.suborder";
+                            $resultallSERM = $db->executeQuery($queryallSERM);
+                           
+                            $queryallcom = "Select status from final_result r,crs_enroll c  where  c.yearEntry='$acyear' and c.indexNo='$indexNo' and r.enroll_id=c.Enroll_id";
+                            $resultallcom = $db->executeQuery($queryallcom);
+                            $rowcom= $db->Next_Record($resultallcom);
+                            $status1=$rowcom['status'];
+        
+                            
+                       
+                             
+                            while ($rowSERM= $db->Next_Record($resultallSERM))
+                      
+                            {
+                                $rowSERM= $db->Next_Record($resultallSERM);
+                            
+                                $marks2=0;$a=0;
+                                for ($m=0;$m<$noofsubjects;$m++){
+                            
+                                
+                                if ($rowSERM['subjectID']==$subjects[$m]){
+                                    
+                                    ?>
+                                    <!-- One Subject -->
+                                    <td>
+                                        <?php echo $rowSERM[0]; ?>
+                                    </td>
+                                    <td>
+                                        <?php echo $rowSERM[1]; ?>
+                                    </td>
+                                    <td>
+                                        <?php echo $rowSERM[2]; ?>
+                                    </td>
+                                    <td>
+                                        <?php echo $rowSERM[3]; ?>
+                                    </td>
+                                    <td>
+                                        <?php echo $rowSERM[4]; ?>
+                                    </td>
+                                    <td>
+                                        <?php echo $rowSERM[3]; ?>
+                                    </td>
+                                    <td>
+                                        <?php echo $rowSERM[4]; ?>
+                                    </td>
+                                ?>  
+                                <?php
+                                }
+                                
+                                  
+                                }
+                    
+                            }   
+                         
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                            // $marks2=0;$a=0;
+                            // $marks2=$marks2+(int)$rowR[12];
+                            // $a=$a+1;
                             // $rowR= $db->Next_Record($resultR);
                                                 
-                        }
-                        ?>
+                        
+                            ?>
                             <!-- Sub Total -->
                             <td></td> 
                             <!-- % -->
@@ -229,10 +299,11 @@ td {
                             <td></td>
                         </tr>
                         <?php
-                    }                           
-                }
-                                            
-                ?>
+                    }   
+                }?>
+
+                                                        
+                
 			
             </table>
             <div align="left" class="box-header with-border">
