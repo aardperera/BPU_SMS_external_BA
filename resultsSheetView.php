@@ -16,7 +16,7 @@ td {
 .vTableHeader1 {
     text-align: center;
 	font-size:10pt;
-    transform: rotate(270deg);
+    /* transform: rotate(270deg); */
 	
 	max-width:50px;
 }
@@ -24,7 +24,7 @@ td {
 .vTableHeader2 {
     text-align: center;
 	font-size:10pt;
-    transform: rotate(270deg);
+    /* transform: rotate(270deg); */
     height: 150px;
 	word-wrap: break-word;
 	word-break: keep-all;
@@ -34,7 +34,7 @@ td {
 .vTableHeader {
     text-align: center;
 	font-size:10pt;
-    transform: rotate(270deg);
+    /* transform: rotate(270deg); */
     height: 75px;
 	max-width:50px;
 }
@@ -158,8 +158,8 @@ if (isset($_POST['btn-save'])) {
                         <td class="vTableHeader">Total</td>
                         <td class="vTableHeader">Grade</td>
                         <td class="vTableHeader">Points</td>
-                        <td class="vTableHeader">Actual Grade</td> 
-                        <td class="vTableHeader">Actual Grade Ponits</td> 
+                        <!-- <td class="vTableHeader">Actual Grade</td> 
+                        <td class="vTableHeader">Actual Grade Ponits</td>  -->
                     <?php
                     }
                     ?>
